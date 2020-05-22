@@ -14,8 +14,12 @@
     "faucon",
     "data"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/faucon-consortium/faucon-web-app.git"
+  },
   "author": "Anastasios Doumoulakis",
-  "license": "UNLICENSED",
+  "license": "TBD",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
@@ -39,11 +43,18 @@
     "url-loader": "^4.1.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@patternfly/patternfly": "^2.71.6",
+    "@patternfly/react-core": "^3.158.1",
+    "@patternfly/react-icons": "^3.15.17",
+    "@patternfly/react-styles": "^3.7.14",
     "express": "^4.17.1",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-router-last-location": "^2.0.1"
   }
 }
