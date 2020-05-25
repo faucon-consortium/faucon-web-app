@@ -1,19 +1,19 @@
 import React from "react";
-import { Route, RouteComponentProps, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { Alert, PageSection } from "@patternfly/react-core";
 import {
   LastLocationProvider,
   useLastLocation,
 } from "react-router-last-location";
-import { DynamicImport } from "./DynamicImport";
-import { accessibleRouteChangeHandler } from "./utils";
-import { Dashboard } from "./Dashboard";
-import { NotFound } from "./NotFound";
-import { useDocumentTitle } from "./useDocumentTitle";
+import { DynamicImport } from "./utils/DynamicImport";
+import { accessibleRouteChangeHandler } from "./utils/utils";
+import { Dashboard } from "./components/Dashboard";
+import { NotFound } from "./components/NotFound";
+import { useDocumentTitle } from "./utils/useDocumentTitle";
 
 let routeFocusTimer;
 
-const getSupportModuleAsync = () => () => import("./Support");
+const getSupportModuleAsync = () => () => import("./components/Support");
 
 const Support = (routeProps) => {
   const lastNavigation = useLastLocation();
@@ -86,7 +86,6 @@ const RouteWithTitleUpdates = ({
   function routeWithTitle(routeProps) {
     return <Component {...rest} {...routeProps} />;
   }
-
   return <Route render={routeWithTitle} />;
 };
 
@@ -95,7 +94,7 @@ const PageNotFound = ({ title }) => {
   return <Route component={NotFound} />;
 };
 
-const AppRoutes = () => (
+const AppRoutes = (props) => (
   <LastLocationProvider>
     <Switch>
       {routes.map(({ path, exact, component, title, isAsync }, idx) => (
@@ -106,6 +105,7 @@ const AppRoutes = () => (
           key={idx}
           title={title}
           isAsync={isAsync}
+          compProps={props}
         />
       ))}
       <PageNotFound title="404 Page Not Found" />

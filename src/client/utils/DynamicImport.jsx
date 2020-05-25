@@ -2,7 +2,6 @@ import React from "react";
 import { accessibleRouteChangeHandler } from "./utils";
 
 class DynamicImport extends React.Component {
-
   constructor(props) {
     super(props);
     this.routeFocusTimer = 0;

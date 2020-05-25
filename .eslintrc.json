@@ -17,10 +17,14 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "react-hooks"],
   "rules": {
+    "import/prefer-default-export": "off",
     "no-console": "off",
     "comma-dangle": "off",
-    "quotes": ["error", "double"]
+    "quotes": ["error", "double"],
+    "object-curly-newline": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }
