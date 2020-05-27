@@ -50,7 +50,6 @@ class AppLayout extends React.Component {
   render() {
     const logoProps = {
       href: "/",
-      target: "_blank",
     };
     const { isNavOpenMobile, isNavOpen, isMobileView, activeUC } = this.state;
     const onNavToggleMobile = () => {
