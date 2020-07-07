@@ -1,15 +1,13 @@
+import { Alert, PageSection } from "@patternfly/react-core";
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { Alert, PageSection } from "@patternfly/react-core";
-import {
-  LastLocationProvider,
-  useLastLocation,
-} from "react-router-last-location";
-import { DynamicImport } from "./utils/DynamicImport";
-import { accessibleRouteChangeHandler } from "./utils/utils";
+import { LastLocationProvider, useLastLocation } from "react-router-last-location";
 import { Dashboard } from "./components/Dashboard";
 import { NotFound } from "./components/NotFound";
+import { DynamicImport } from "./utils/DynamicImport";
 import { useDocumentTitle } from "./utils/useDocumentTitle";
+import { accessibleRouteChangeHandler } from "./utils/utils";
+import { Feed } from "./components/Feed";
 
 let routeFocusTimer;
 
@@ -50,13 +48,41 @@ const routes = [
     title: "Faucon | Main Dashboard",
   },
   {
+    component: NotFound,
+    exact: true,
+    label: "Analysis Results",
+    path: "/results",
+    title: "Faucon | Data Analysis Results"
+  },
+  {
+    component: Feed,
+    exact: true,
+    label: "Social Media Feed",
+    path: "/feed",
+    title: "Faucon | Social Media Feed"
+  },
+  {
+    component: NotFound,
+    exact: true,
+    label: "Ontology",
+    path: "/ontology",
+    title: "Faucon | Ontology exploration"
+  },
+  {
+    component: NotFound,
+    exact: true,
+    label: "Dataset Query",
+    path: "/query",
+    title: "Faucon | Dataset Query"
+  },
+  {
     component: Support,
     exact: true,
     isAsync: true,
-    label: "Support",
-    path: "/support",
-    title: "Faucon | Support Page",
-  },
+    label: "Additional Modules",
+    path: "/modules",
+    title: "Faucon | Module Page",
+  }
 ];
 
 // a custom hook for sending focus to the primary content container

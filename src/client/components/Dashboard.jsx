@@ -60,6 +60,9 @@ function Dashboard({ compProps }) {
               <FlexItem>
                 <SelectedCard />
               </FlexItem>
+              <FlexItem>
+                <SelectedCard />
+              </FlexItem>
             </Flex>
           </GridItem>
           <GridItem span={12} rowSpan={2}>

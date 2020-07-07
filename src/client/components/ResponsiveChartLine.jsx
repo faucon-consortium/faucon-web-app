@@ -49,7 +49,7 @@ class ResponsiveChartLine extends React.Component {
               { name: "Mice" },
             ]}
             legendPosition="bottom-left"
-            height={500}
+            height={275}
             maxDomain={{ y: 10 }}
             minDomain={{ y: 0 }}
             padding={{
