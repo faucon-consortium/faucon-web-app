@@ -7,16 +7,15 @@ import {
   Divider,
   Flex,
   FlexItem,
-  FlexModifiers,
   Grid,
   GridItem,
   PageSection,
   Title,
 } from "@patternfly/react-core";
 
-import { ResponsiveChartArea } from "./ResponsiveChartArea";
-import { ResponsiveChartLine } from "./ResponsiveChartLine";
-import { ResponsiveChartBullet } from "./ResponsiveChartBullet";
+import { ResponsiveChartArea } from "./ResponsiveChartArea.jsx";
+import { ResponsiveChartLine } from "./ResponsiveChartLine.jsx";
+import { ResponsiveChartBullet } from "./ResponsiveChartBullet.jsx";
 
 function SelectedCard() {
   return (
@@ -27,13 +26,12 @@ function SelectedCard() {
   );
 }
 
-function Dashboard({ compProps }) {
-  const { activeUC } = compProps;
+function GridTest() {
   return (
-    <React.Fragment>
+    <>
       <PageSection>
         <Title headingLevel="h1" size="xl" style={{ textAlign: "center" }}>
-          Dashboard for Usecase {activeUC}
+          Grid Test
         </Title>
       </PageSection>
       <Divider />
@@ -43,11 +41,7 @@ function Dashboard({ compProps }) {
             <Title headingLevel="h3" size="lg">
               span = 12, rowSpan = 1
             </Title>
-            <Flex
-              breakpointMods={[
-                { modifier: FlexModifiers["justify-content-center"] },
-              ]}
-            >
+            <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
               <FlexItem>
                 <SelectedCard />
               </FlexItem>
@@ -85,16 +79,16 @@ function Dashboard({ compProps }) {
           </GridItem>
         </Grid>
       </PageSection>
-    </React.Fragment>
+    </>
   );
 }
 
-Dashboard.defaultProps = {
+GridTest.defaultProps = {
   compProps: null,
 };
 
-Dashboard.propTypes = {
+GridTest.propTypes = {
   compProps: PropTypes.shape({ activeUC: PropTypes.number.isRequired }),
 };
 
-export { Dashboard };
+export { GridTest };

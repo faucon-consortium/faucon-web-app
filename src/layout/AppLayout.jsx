@@ -11,8 +11,8 @@ import {
   SkipToContent,
 } from "@patternfly/react-core";
 
-import { NavHorizontalList } from "./NavHorizontalList";
-import { routes } from "../routes";
+import { NavHorizontalList } from "./NavHorizontalList.jsx";
+import { routes } from "../routes.jsx";
 // import fauconlogo from "../media/faucon.svg";
 
 class AppLayout extends React.Component {

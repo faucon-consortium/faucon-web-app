@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { Nav, NavList, NavItem, NavVariants } from "@patternfly/react-core";
+import { Nav, NavList, NavItem } from "@patternfly/react-core";
 
 class NavHorizontalList extends React.Component {
   constructor(props) {
@@ -21,8 +21,8 @@ class NavHorizontalList extends React.Component {
   render() {
     const { activeItem } = this.state;
     const nav = (
-      <Nav onSelect={this.onSelect}>
-        <NavList variant={NavVariants.horizontal}>
+      <Nav onSelect={this.onSelect} variant="horizontal">
+        <NavList>
           <NavItem key={1} itemId={1} isActive={activeItem === 1}>
             Use Case 1
           </NavItem>

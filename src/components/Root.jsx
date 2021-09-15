@@ -1,8 +1,8 @@
 import React from "react";
-// import Navbar from "./Navbar";
 import { BrowserRouter } from "react-router-dom";
-import { AppLayout } from "../layout/AppLayout";
-import { AppRoutes } from "../routes";
+
+import { AppLayout } from "../layout/AppLayout.jsx";
+import { AppRoutes } from "../routes.jsx";
 
 import "@patternfly/patternfly/patternfly.css";
 // import "@patternfly/react-core/dist/styles/base.css";
@@ -12,9 +12,7 @@ export default class Root extends React.PureComponent {
   render() {
     return (
       <BrowserRouter>
-        <AppLayout>
-          {AppRoutes}
-        </AppLayout>
+        <AppLayout>{AppRoutes}</AppLayout>
       </BrowserRouter>
     );
   }
