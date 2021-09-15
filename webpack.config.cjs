@@ -15,8 +15,7 @@ module.exports = {
   mode: isDevelopment ? "development" : "production",
   devServer: {
     port: 8080,
-    contentBase: ["./src", "./public"], // both src and output dirs
-    inline: true,
+    static: ["./src", "./public"], // both src and output dirs
     hot: true,
   },
   entry: "./src/index.jsx",
