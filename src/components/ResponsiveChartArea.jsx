@@ -40,12 +40,12 @@ class ResponsiveChartArea extends React.Component {
         <Chart
           ariaDesc="Average number of pets"
           ariaTitle="Area chart example"
-          containerComponent={(
+          containerComponent={
             <ChartVoronoiContainer
               labels={({ datum }) => `${datum.name}: ${datum.y}`}
               constrainToVisibleArea
             />
-          )}
+          }
           legendData={[{ name: "Cats" }, { name: "Dogs" }, { name: "Birds" }]}
           legendPosition="bottom-left"
           height={225}

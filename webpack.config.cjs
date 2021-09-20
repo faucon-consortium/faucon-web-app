@@ -1,4 +1,5 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+// const NodeExternals = require("webpack-node-externals");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
@@ -18,6 +19,9 @@ module.exports = {
     static: ["./src", "./public"], // both src and output dirs
     hot: true,
   },
+  // target: "node",
+  // externalsPresets: { node: true },
+  // externals: [NodeExternals()],
   entry: "./src/index.jsx",
   output: {
     path: path.join(__dirname, "dist"),
