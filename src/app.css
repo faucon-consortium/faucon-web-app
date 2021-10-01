@@ -1,3 +1,6 @@
 html, body, #root {
   height: 100%;
 }
+
+tr:nth-child(even) {background: rgb(240, 240, 240)}
+tr:nth-child(odd) {background: rgb(255, 255, 255)}

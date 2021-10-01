@@ -4,6 +4,13 @@ import {
   HelperTextItem,
   Grid,
   GridItem,
+  Drawer,
+  DrawerPanelContent,
+  DrawerContent,
+  DrawerContentBody,
+  DrawerHead,
+  DrawerActions,
+  DrawerCloseButton,
 } from "@patternfly/react-core";
 
 import {
@@ -24,17 +31,38 @@ class UC4CommunityVisuAlgo extends React.Component {
       algo: props.algo,
       rows: [],
       data: null,
+      isExpanded: false,
+      drawerData: "",
+    };
+
+    this.drawerRef = React.createRef();
+
+    this.onExpand = () => {
+      if (this.drawerRef.current) this.drawerRef.current.focus();
+    };
+
+    this.onClick = () => {
+      const { isExpanded } = this.state;
+      this.setState({
+        isExpanded: !isExpanded,
+      });
+    };
+
+    this.onCloseClick = () => {
+      this.setState({
+        isExpanded: false,
+      });
     };
 
     this.onRowClick = (event, rowIndex) => {
-      const { rows } = this.state;
-      console.log(rows);
-      console.log(rowIndex);
+      const { rows, data } = this.state;
       for (let i = 0; i < rows.length; i += 1) {
         rows[i].isRowSelected = false;
       }
       rows[rowIndex].isRowSelected = !rows[rowIndex].isRowSelected;
-      this.forceUpdate();
+      const docids = data[rowIndex].docids.slice(0, 9);
+      this.onClick();
+      this.setState({ drawerData: docids });
     };
   }
 
@@ -60,14 +88,64 @@ class UC4CommunityVisuAlgo extends React.Component {
   }
 
   communityTab() {
-    const { rows } = this.state;
+    const { rows, isExpanded, drawerData } = this.state;
     const columns = [
       "Id",
       "Community Total Size",
       "Number of documents",
       "Number of users",
     ];
-    return (
+
+    const genDrawer = () => {
+      if (drawerData == null) return <div />;
+      const drawerCols = ["Docid", "wa_zoom", "wa_vignette"];
+      const drawerRows = new Array(Object.keys(drawerData).length);
+      Object.keys(drawerData).forEach((key, idx) => {
+        drawerRows[idx] = [
+          drawerData[key].docid,
+          drawerData[key].wa_zoom,
+          drawerData[key].wa_vignette,
+        ];
+      });
+      return (
+        <TableComposable aria-label="Simple table" variant="default">
+          <Thead>
+            <Tr>
+              {drawerCols.map((column, columnIndex) => (
+                <Th key={columnIndex}>{column}</Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {drawerRows.map((row, rowIndex) => (
+              <Tr key={rowIndex}>
+                {row.map((cell, cellIndex) => (
+                  <Td
+                    key={`${rowIndex}_${cellIndex}`}
+                    dataLabel={columns[cellIndex]}
+                  >
+                    {cell}
+                  </Td>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
+        </TableComposable>
+      );
+    };
+
+    const panelContent = (
+      <DrawerPanelContent>
+        <DrawerHead>
+          <span ref={this.drawerRef}>{genDrawer()}</span>
+          <DrawerActions>
+            <DrawerCloseButton onClick={this.onCloseClick} />
+          </DrawerActions>
+        </DrawerHead>
+      </DrawerPanelContent>
+    );
+
+    const drawerContent = (
       <TableComposable aria-label="Simple table" variant="default">
         <Thead>
           <Tr>
@@ -81,7 +159,7 @@ class UC4CommunityVisuAlgo extends React.Component {
             <Tr
               key={rowIndex}
               onRowClick={(event) => this.onRowClick(event, rowIndex)}
-              isHoverable
+              // isHoverable
               isRowSelected={row.isRowSelected}
             >
               {row.cells.map((cell, cellIndex) => (
@@ -96,6 +174,14 @@ class UC4CommunityVisuAlgo extends React.Component {
           ))}
         </Tbody>
       </TableComposable>
+    );
+
+    return (
+      <Drawer isExpanded={isExpanded} onExpand={this.onExpand}>
+        <DrawerContent panelContent={panelContent}>
+          <DrawerContentBody>{drawerContent}</DrawerContentBody>
+        </DrawerContent>
+      </Drawer>
     );
   }
 
