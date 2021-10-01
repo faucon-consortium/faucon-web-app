@@ -18,14 +18,17 @@ module.exports = {
     port: 8080,
     static: ["./src", "./public"], // both src and output dirs
     hot: true,
+    historyApiFallback: true,
   },
   // target: "node",
   // externalsPresets: { node: true },
   // externals: [NodeExternals()],
   entry: "./src/index.jsx",
   output: {
+    filename: "[name].bundle.js",
+    clean: true,
     path: path.join(__dirname, "dist"),
-    filename: "[name].js",
+    publicPath: "/",
   },
   plugins: [
     htmlPlugin,

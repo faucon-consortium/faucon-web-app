@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { NotFound } from "./components/NotFound.jsx";
 import { Dashboard } from "./components/Dashboard.jsx";
+import { Community } from "./components/Community.jsx";
 
 const routes = [
   {
@@ -26,11 +27,11 @@ const routes = [
     title: "Faucon | Component 3",
   },
   {
-    component: NotFound,
+    component: Community,
     exact: true,
-    label: "Component 4",
-    path: "/c4",
-    title: "Faucon | Component 4",
+    label: "Communities",
+    path: "/community",
+    title: "Faucon | Communities",
   },
 ];
 
