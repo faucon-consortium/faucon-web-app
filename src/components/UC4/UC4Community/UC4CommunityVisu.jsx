@@ -7,6 +7,10 @@ import {
   Tabs,
   Tab,
   TabTitleText,
+  Spinner,
+  Bullseye,
+  Title,
+  Divider,
 } from "@patternfly/react-core";
 
 import {
@@ -18,6 +22,14 @@ import {
   Td,
 } from "@patternfly/react-table";
 
+import {
+  Chart,
+  ChartAxis,
+  ChartBar,
+  ChartGroup,
+  ChartVoronoiContainer,
+} from "@patternfly/react-charts";
+
 import ExclamationIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-icon";
 
 import { UC4CommunityVisuAlgo } from "./UC4CommunityVisuAlgo.jsx";
@@ -26,23 +38,49 @@ import { UC4CommunityVisuChart } from "./UC4CommunityVisuChart.jsx";
 class UC4CommunityVisu extends React.Component {
   constructor(props) {
     super(props);
+    this.containerRef = React.createRef();
     this.state = {
+      loading: true,
       communities: [],
       communititesStats: [],
       communitiesSizes: [],
+      communitiesData: [],
       fetchError: null,
       activeTabKey: 0,
+      width: 2000,
     };
     this.handleTabClick = (event, tabIndex) => {
       this.setState({
         activeTabKey: tabIndex,
       });
     };
+
+    this.handleResize = () => {
+      if (this.containerRef.current && this.containerRef.current.clientWidth) {
+        this.setState({ width: this.containerRef.current.clientWidth });
+      }
+    };
   }
 
   componentDidMount() {
     const { communities } = this.state;
     if (communities.length === 0) this.communityList();
+    this.handleResize();
+    window.addEventListener("resize", this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  }
+
+  fetchAll() {
+    const { communities } = this.state;
+    console.assert(communities.length > 0);
+    communities.forEach((algo) => {
+      this.communityStats(algo);
+      this.communityData(algo);
+      this.communitySizes(algo);
+    });
   }
 
   communityList() {
@@ -54,6 +92,7 @@ class UC4CommunityVisu extends React.Component {
             communities: [],
             communititesStats: [],
             communitiesSizes: [],
+            communitiesData: [],
             fetchError: data,
           });
         } else {
@@ -63,13 +102,16 @@ class UC4CommunityVisu extends React.Component {
               communities: result,
               communititesStats: [],
               communitiesSizes: [],
+              communitiesData: [],
               fetchError: null,
             });
+            this.fetchAll();
           } else {
             this.setState({
               communities: [],
               communititesStats: [],
               communitiesSizes: [],
+              communitiesData: [],
               fetchError: result,
             });
           }
@@ -80,6 +122,7 @@ class UC4CommunityVisu extends React.Component {
           communities: [],
           communititesStats: [],
           communitiesSizes: [],
+          communitiesData: [],
           fetchError: error,
         });
         console.error("Error:", error);
@@ -95,6 +138,7 @@ class UC4CommunityVisu extends React.Component {
             communities: [],
             communititesStats: [],
             communitiesSizes: [],
+            communitiesData: [],
             fetchError: data,
           });
         } else if (data.result === "not found") {
@@ -102,12 +146,25 @@ class UC4CommunityVisu extends React.Component {
             communities: [],
             communititesStats: [],
             communitiesSizes: [],
+            communitiesData: [],
             fetchError: data.result,
           });
         } else {
-          const { communititesStats } = this.state;
+          const {
+            communitiesSizes,
+            communitiesData,
+            communititesStats,
+            communities,
+          } = this.state;
           communititesStats[algorithm] = data.result;
           console.assert(Object.keys(communititesStats).length !== 0);
+          if (
+            Object.keys(communitiesSizes).length === communities.length &&
+            Object.keys(communitiesData).length === communities.length &&
+            Object.keys(communititesStats).length === communities.length
+          ) {
+            this.setState({ loading: false });
+          }
         }
       })
       .catch((error) => {
@@ -115,6 +172,59 @@ class UC4CommunityVisu extends React.Component {
           communities: [],
           communititesStats: [],
           communitiesSizes: [],
+          communitiesData: [],
+          fetchError: error,
+        });
+        console.error("Error:", error);
+      });
+  }
+
+  communityData(algorithm) {
+    fetch(`http://localhost:5002/getcommunity/full/${algorithm}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!Object.prototype.hasOwnProperty.call(data, "result")) {
+          this.setState({
+            communities: [],
+            communititesStats: [],
+            communitiesSizes: [],
+            communitiesData: [],
+            fetchError: data,
+          });
+        } else {
+          const { result } = data;
+          if (Array.isArray(result)) {
+            const {
+              communitiesSizes,
+              communitiesData,
+              communititesStats,
+              communities,
+            } = this.state;
+            communitiesData[algorithm] = result;
+            if (
+              Object.keys(communitiesSizes).length === communities.length &&
+              Object.keys(communitiesData).length === communities.length &&
+              Object.keys(communititesStats).length === communities.length
+            ) {
+              this.setState({ loading: false });
+            }
+          } else {
+            this.setState({
+              communities: [],
+              communititesStats: [],
+              communitiesSizes: [],
+              communitiesData: [],
+              fetchError: data,
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          communities: [],
+          communititesStats: [],
+          communitiesSizes: [],
+          communitiesData: [],
           fetchError: error,
         });
         console.error("Error:", error);
@@ -130,6 +240,7 @@ class UC4CommunityVisu extends React.Component {
             communities: [],
             communititesStats: [],
             communitiesSizes: [],
+            communitiesData: [],
             fetchError: data,
           });
         } else if (data.result === "not found") {
@@ -137,12 +248,25 @@ class UC4CommunityVisu extends React.Component {
             communities: [],
             communititesStats: [],
             communitiesSizes: [],
+            communitiesData: [],
             fetchError: data.result,
           });
         } else {
-          const { communitiesSizes } = this.state;
+          const {
+            communitiesSizes,
+            communitiesData,
+            communititesStats,
+            communities,
+          } = this.state;
           communitiesSizes[algorithm] = data.result;
           console.assert(Object.keys(communitiesSizes).length !== 0);
+          if (
+            Object.keys(communitiesSizes).length === communities.length &&
+            Object.keys(communitiesData).length === communities.length &&
+            Object.keys(communititesStats).length === communities.length
+          ) {
+            this.setState({ loading: false });
+          }
         }
       })
       .catch((error) => {
@@ -150,6 +274,7 @@ class UC4CommunityVisu extends React.Component {
           communities: [],
           communititesStats: [],
           communitiesSizes: [],
+          communitiesData: [],
           fetchError: error,
         });
         console.error("Error:", error);
@@ -173,21 +298,61 @@ class UC4CommunityVisu extends React.Component {
   }
 
   communitiesTabs() {
-    const { communities, activeTabKey } = this.state;
+    const { activeTabKey, communitiesData } = this.state;
     const tooltipRef = React.createRef();
-    const comTabs = communities.map((community, idx) => (
+    const barChartData = [];
+    const barChartLegend = [];
+    const comTabs = Object.keys(communitiesData).map((community, idx) => (
       <Tab
         eventKey={idx + 2}
         key={idx + 2}
         title={<TabTitleText>{community}</TabTitleText>}
       >
-        <UC4CommunityVisuAlgo algo={community} />
+        <UC4CommunityVisuAlgo
+          algo={community}
+          data={communitiesData[community]}
+        />
       </Tab>
     ));
+    Object.keys(communitiesData).forEach((algo) => {
+      const communities = communitiesData[algo];
+      communities.sort((f, s) => f.nb_ip - s.nb_ip);
+      const nbCommunities = communities.length;
+      let nbIp = 0;
+      communities.forEach((community) => {
+        nbIp += community.nb_ip;
+      });
+      let ipAcc = 0;
+      let lastPercent = 0;
+      const data = [];
+      communities.forEach((community, index) => {
+        let percent = Math.round((index * 100) / nbCommunities);
+        ipAcc += community.nb_ip;
+        const percentIp = Math.round((ipAcc * 100) / nbIp);
+        if (percent - lastPercent >= 5 || index === nbCommunities - 1) {
+          if (index === nbCommunities - 1) percent = 100;
+          lastPercent = percent - (percent - lastPercent - 5);
+          data.push({
+            name: algo,
+            x: lastPercent,
+            y: percentIp,
+          });
+        }
+      });
+      if (data.length === 19)
+        data.push({
+          name: algo,
+          x: 100,
+          y: 100,
+        });
+      barChartData.push(data);
+      barChartLegend.push({ name: algo });
+    });
     return (
       <div>
         <Tabs
           isFilled
+          component="div"
           activeKey={activeTabKey}
           onSelect={this.handleTabClick}
           isBox={false}
@@ -200,13 +365,14 @@ class UC4CommunityVisu extends React.Component {
           >
             {this.communititesTable()}
             {this.communitiesCharts()}
+            {this.communitiesBarChart(barChartData, barChartLegend)}
           </Tab>
           <Tab
             eventKey={1}
             key={1}
             title={<TabTitleText>Find element in community</TabTitleText>}
           >
-            <div>Ploup</div>
+            <div>TODO</div>
           </Tab>
           {comTabs}
         </Tabs>
@@ -244,7 +410,7 @@ class UC4CommunityVisu extends React.Component {
       ];
     });
     return (
-      <TableComposable aria-label="Simple table" variant="default">
+      <TableComposable aria-label="Simple table" variant="compact">
         <Thead>
           <Tr>
             {columns.map((column, columnIndex) => (
@@ -270,6 +436,54 @@ class UC4CommunityVisu extends React.Component {
     );
   }
 
+  communitiesBarChart(data, legendData) {
+    const { width } = this.state;
+    return (
+      <div>
+        <Divider style={{ paddingTop: "4em" }} />
+        <div
+          style={{ height: "600px", paddingBottom: "2em", paddingTop: "2em" }}
+        >
+          <Chart
+            containerComponent={
+              <ChartVoronoiContainer
+                labels={({ datum }) => `${datum.name}: ${datum.y}`}
+                constrainToVisibleArea
+              />
+            }
+            domain={{ y: [0, 100] }}
+            domainPadding={{ x: [30, 25] }}
+            legendData={legendData}
+            legendOrientation="vertical"
+            legendPosition="right"
+            height={600}
+            padding={{
+              bottom: 60,
+              left: 100,
+              right: 200, // Adjusted to accommodate legend
+              top: 50,
+            }}
+            width={width}
+          >
+            <ChartAxis label="Percent of communities" />
+            <ChartAxis label="Percent of users" dependentAxis showGrid />
+            <ChartGroup offset={12}>
+              {data.map((algoData, idx) => (
+                <ChartBar key={idx} data={algoData} />
+              ))}
+            </ChartGroup>
+          </Chart>
+        </div>
+        <Bullseye>
+          <Title style={{ paddingBottom: "3em" }} headingLevel="h4" size="xl">
+            Chart showing what percent of users are in what percent of the
+            bottom communities
+          </Title>
+        </Bullseye>
+      </div>
+    );
+  }
+
   communitiesCharts() {
     const { communities, communitiesSizes } = this.state;
     if (communities.length === 0) return <div />;
@@ -279,6 +493,8 @@ class UC4CommunityVisu extends React.Component {
         this.communitySizes(community);
       });
     }
+
+    // communities.forEach((community) => {});
 
     const legendData = [
       { childName: "louvain", name: "Louvain" },
@@ -341,6 +557,7 @@ class UC4CommunityVisu extends React.Component {
         { name: community, x: "10000+", y: res[7] },
       ];
     });
+    if (docidData.length !== legendData.length) return <div />;
     return (
       <div>
         <UC4CommunityVisuChart
@@ -362,15 +579,16 @@ class UC4CommunityVisu extends React.Component {
   }
 
   render() {
-    const { fetchError } = this.state;
-
-    const res =
-      fetchError == null ? (
-        <div>{this.communitiesTabs()}</div>
-      ) : (
-        this.errorCommunity(`No communities found (${fetchError})`)
+    const { fetchError, loading } = this.state;
+    if (loading === true) {
+      return (
+        <Bullseye style={{ paddingTop: "20em" }}>
+          <Spinner size="xl" />
+        </Bullseye>
       );
-    return <div>{res}</div>;
+    }
+    if (fetchError === null) return <div>{this.communitiesTabs()}</div>;
+    return this.errorCommunity(`No communities found (${fetchError})`);
   }
 }
 

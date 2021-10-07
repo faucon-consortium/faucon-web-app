@@ -48,7 +48,6 @@ class UC4Community extends React.Component {
     fetch("http://localhost:5002/filelist")
       .then((res) => res.json())
       .then((data) => {
-        // console.log("DATA --> " + JSON.stringify(data));
         this.setState({ files: data });
       })
       .catch(console.log);
@@ -95,7 +94,8 @@ class UC4Community extends React.Component {
     }
     return (
       <div>
-        <Tabs
+        <UC4CommunityVisu />
+        {/* <Tabs
           isFilled
           activeKey={activeTabKey}
           onSelect={this.handleTabClick}
@@ -140,7 +140,7 @@ class UC4Community extends React.Component {
           >
             <UC4CommunityVisu />
           </Tab>
-        </Tabs>
+        </Tabs> */}
       </div>
     );
   }

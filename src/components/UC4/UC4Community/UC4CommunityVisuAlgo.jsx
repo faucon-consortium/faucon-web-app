@@ -27,10 +27,25 @@ import ExclamationIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-
 class UC4CommunityVisuAlgo extends React.Component {
   constructor(props) {
     super(props);
+    const { data } = props;
+    const len = data.length >= 10 ? 10 : data.length;
+    const rows = new Array(len);
+    data.sort((f, s) => s.nb_doc - f.nb_doc);
+    for (let i = 0; i < len; i += 1) {
+      rows[i] = {
+        cells: [
+          i + 1,
+          data[i].nb_ip + data[i].nb_doc,
+          data[i].nb_doc,
+          data[i].nb_ip,
+        ],
+        isRowSelected: false,
+      };
+    }
     this.state = {
-      algo: props.algo,
-      rows: [],
-      data: null,
+      // algo: props.algo,
+      rows: rows,
+      data: props.data,
       isExpanded: false,
       drawerData: "",
     };
@@ -55,21 +70,22 @@ class UC4CommunityVisuAlgo extends React.Component {
     };
 
     this.onRowClick = (event, rowIndex) => {
-      const { rows, data } = this.state;
+      // const { rows, data } = this.state;
       for (let i = 0; i < rows.length; i += 1) {
         rows[i].isRowSelected = false;
       }
       rows[rowIndex].isRowSelected = !rows[rowIndex].isRowSelected;
+      data.sort((f, s) => s.nb_doc - f.nb_doc);
       const docids = data[rowIndex].docids.slice(0, 9);
       this.onClick();
       this.setState({ drawerData: docids });
     };
   }
 
-  componentDidMount() {
-    const { data } = this.state;
-    if (data == null) this.communityData();
-  }
+  // componentDidMount() {
+  // const { data } = this.state;
+  // if (data == null) this.communityData();
+  // }
 
   error(message) {
     return (
@@ -108,7 +124,7 @@ class UC4CommunityVisuAlgo extends React.Component {
         ];
       });
       return (
-        <TableComposable aria-label="Simple table" variant="default">
+        <TableComposable aria-label="Simple table" variant="compact">
           <Thead>
             <Tr>
               {drawerCols.map((column, columnIndex) => (
@@ -185,51 +201,51 @@ class UC4CommunityVisuAlgo extends React.Component {
     );
   }
 
-  communityData() {
-    const { algo } = this.state;
-    fetch(`http://localhost:5002/getcommunity/full/${algo}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!Object.prototype.hasOwnProperty.call(data, "result")) {
-          this.setState({
-            data: null,
-            rows: [],
-          });
-        } else {
-          const { result } = data;
-          if (Array.isArray(result)) {
-            const len = result.length >= 10 ? 10 : result.length;
-            const rows = new Array(len);
-            for (let i = 0; i < len; i += 1) {
-              rows[i] = {
-                cells: [
-                  i + 1,
-                  result[i].nb_ip + result[i].nb_doc,
-                  result[i].nb_doc,
-                  result[i].nb_ip,
-                ],
-                isRowSelected: false,
-              };
-            }
-            this.setState({
-              data: result,
-              rows: rows,
-            });
-          } else {
-            this.setState({
-              data: null,
-              rows: [],
-            });
-          }
-        }
-      })
-      .catch((error) => {
-        this.setState({
-          data: null,
-        });
-        console.error("Error:", error);
-      });
-  }
+  // communityData() {
+  //   const { algo } = this.state;
+  //   fetch(`http://localhost:5002/getcommunity/full/${algo}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (!Object.prototype.hasOwnProperty.call(data, "result")) {
+  //         this.setState({
+  //           data: null,
+  //           rows: [],
+  //         });
+  //       } else {
+  //         const { result } = data;
+  //         if (Array.isArray(result)) {
+  //           const len = result.length >= 10 ? 10 : result.length;
+  //           const rows = new Array(len);
+  //           for (let i = 0; i < len; i += 1) {
+  //             rows[i] = {
+  //               cells: [
+  //                 i + 1,
+  //                 result[i].nb_ip + result[i].nb_doc,
+  //                 result[i].nb_doc,
+  //                 result[i].nb_ip,
+  //               ],
+  //               isRowSelected: false,
+  //             };
+  //           }
+  //           this.setState({
+  //             data: result,
+  //             rows: rows,
+  //           });
+  //         } else {
+  //           this.setState({
+  //             data: null,
+  //             rows: [],
+  //           });
+  //         }
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       this.setState({
+  //         data: null,
+  //       });
+  //       console.error("Error:", error);
+  //     });
+  // }
 
   render() {
     const { data } = this.state;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextVariants } from "@patternfly/react-core";
+import { Title } from "@patternfly/react-core";
 import {
   Chart,
   ChartArea,
@@ -47,7 +47,7 @@ class UC4CommunityVisuChart extends React.Component {
     return (
       <div
         ref={this.containerRef}
-        style={{ height: "500px", textAlign: "center" }}
+        style={{ height: "600px", textAlign: "center" }}
       >
         <Chart
           title="Area chart example"
@@ -75,7 +75,7 @@ class UC4CommunityVisuChart extends React.Component {
             top: 50,
           }}
           maxDomain={{ y: 320 }}
-          height={500}
+          height={600}
           themeColor={ChartThemeColor.multiUnordered}
           width={width}
         >
@@ -92,9 +92,9 @@ class UC4CommunityVisuChart extends React.Component {
             ))}
           </ChartGroup>
         </Chart>
-        <Text style={{ paddingBottom: "3em" }} component={TextVariants.h1}>
+        <Title style={{ paddingBottom: "3em" }} headingLevel="h4" size="xl">
           {bottomLegend}
-        </Text>
+        </Title>
       </div>
     );
   }
