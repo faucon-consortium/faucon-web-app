@@ -14,16 +14,6 @@ class UC4DashboardPieChart extends React.Component {
     };
   }
 
-  //   [{ x: "Cats", y: 35 },
-  //   { x: "Dogs", y: 55 },
-  //   { x: "Birds", y: 10 },]
-
-  // [
-  //   { name: "Cats: 35" },
-  //   { name: "Dogs: 55" },
-  //   { name: "Birds: 10" },
-  // ]
-
   render() {
     const { data, legend, legendData } = this.state;
     console.log(legendData);
@@ -39,8 +29,8 @@ class UC4DashboardPieChart extends React.Component {
             legendData={legendData}
             legendPosition="bottom"
             padding={{
-              bottom: 65,
-              left: 20,
+              bottom: 80,
+              left: 0,
               right: 20,
               top: 20,
             }}

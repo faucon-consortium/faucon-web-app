@@ -23,7 +23,7 @@ class NavHorizontalList extends React.Component {
     const nav = (
       <Nav onSelect={this.onSelect} variant="horizontal">
         <NavList>
-          <NavItem key={1} itemId={1} isActive={activeItem === 1}>
+          {/* <NavItem key={1} itemId={1} isActive={activeItem === 1}>
             Use Case 1
           </NavItem>
           <NavItem key={2} itemId={2} isActive={activeItem === 2}>
@@ -31,7 +31,7 @@ class NavHorizontalList extends React.Component {
           </NavItem>
           <NavItem key={3} itemId={3} isActive={activeItem === 3}>
             Use Case 3
-          </NavItem>
+          </NavItem> */}
           <NavItem key={4} itemId={4} isActive={activeItem === 4}>
             Use Case 4
           </NavItem>

@@ -43,11 +43,13 @@ class UC4CommunityVisuAlgo extends React.Component {
       };
     }
     this.state = {
-      // algo: props.algo,
+      algo: props.algo,
       rows: rows,
       data: props.data,
       isExpanded: false,
       drawerData: "",
+      topAuthors: "",
+      selectedTopAuthors: [],
     };
 
     this.drawerRef = React.createRef();
@@ -70,22 +72,39 @@ class UC4CommunityVisuAlgo extends React.Component {
     };
 
     this.onRowClick = (event, rowIndex) => {
-      // const { rows, data } = this.state;
+      const { topAuthors } = this.state;
       for (let i = 0; i < rows.length; i += 1) {
         rows[i].isRowSelected = false;
       }
       rows[rowIndex].isRowSelected = !rows[rowIndex].isRowSelected;
       data.sort((f, s) => s.nb_doc - f.nb_doc);
       const docids = data[rowIndex].docids.slice(0, 9);
+      const topAuth = topAuthors[rowIndex].slice(0, 9);
       this.onClick();
-      this.setState({ drawerData: docids });
+      this.setState({ drawerData: docids, selectedTopAuthors: [topAuth] });
     };
   }
 
-  // componentDidMount() {
-  // const { data } = this.state;
-  // if (data == null) this.communityData();
-  // }
+  componentDidMount() {
+    this.getTopAuthors();
+  }
+
+  getTopAuthors() {
+    const { algo } = this.state;
+    fetch(`http://localhost:5002/getcommunity/authors/${algo}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (
+          Object.prototype.hasOwnProperty.call(data, "result") &&
+          data.result !== "not found"
+        ) {
+          this.setState({ topAuthors: data.result });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   error(message) {
     return (
@@ -104,7 +123,7 @@ class UC4CommunityVisuAlgo extends React.Component {
   }
 
   communityTab() {
-    const { rows, isExpanded, drawerData } = this.state;
+    const { rows, isExpanded, drawerData, selectedTopAuthors } = this.state;
     const columns = [
       "Id",
       "Community Total Size",
@@ -116,6 +135,7 @@ class UC4CommunityVisuAlgo extends React.Component {
       if (drawerData == null) return <div />;
       const drawerCols = ["Docid", "wa_zoom", "wa_vignette"];
       const drawerRows = new Array(Object.keys(drawerData).length);
+      const drawerAuthors = ["Authors"];
       Object.keys(drawerData).forEach((key, idx) => {
         drawerRows[idx] = [
           drawerData[key].docid,
@@ -123,30 +143,56 @@ class UC4CommunityVisuAlgo extends React.Component {
           drawerData[key].wa_vignette,
         ];
       });
+
       return (
-        <TableComposable aria-label="Simple table" variant="compact">
-          <Thead>
-            <Tr>
-              {drawerCols.map((column, columnIndex) => (
-                <Th key={columnIndex}>{column}</Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {drawerRows.map((row, rowIndex) => (
-              <Tr key={rowIndex}>
-                {row.map((cell, cellIndex) => (
-                  <Td
-                    key={`${rowIndex}_${cellIndex}`}
-                    dataLabel={columns[cellIndex]}
-                  >
-                    {cell}
-                  </Td>
+        <div>
+          <TableComposable aria-label="Simple table" variant="compact">
+            <Thead>
+              <Tr>
+                {drawerCols.map((column, columnIndex) => (
+                  <Th key={columnIndex}>{column}</Th>
                 ))}
               </Tr>
-            ))}
-          </Tbody>
-        </TableComposable>
+            </Thead>
+            <Tbody>
+              {drawerRows.map((row, rowIndex) => (
+                <Tr key={rowIndex}>
+                  {row.map((cell, cellIndex) => (
+                    <Td
+                      key={`${rowIndex}_${cellIndex}`}
+                      dataLabel={columns[cellIndex]}
+                    >
+                      {cell}
+                    </Td>
+                  ))}
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+          <TableComposable aria-label="Simple table" variant="compact">
+            <Thead>
+              <Tr>
+                {drawerAuthors.map((column, columnIndex) => (
+                  <Th key={columnIndex}>{column}</Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {selectedTopAuthors.map((row, rowIndex) => (
+                <Tr key={rowIndex}>
+                  {row.map((cell, cellIndex) => (
+                    <Td
+                      key={`${rowIndex}_${cellIndex}`}
+                      dataLabel={columns[cellIndex]}
+                    >
+                      {cell}
+                    </Td>
+                  ))}
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </div>
       );
     };
 

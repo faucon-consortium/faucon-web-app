@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import { NotFound } from "./components/NotFound.jsx";
 import { Dashboard } from "./components/Dashboard.jsx";
 import { Community } from "./components/Community.jsx";
+import { Recommandation } from "./components/Recommandation.jsx";
 
 const routes = [
   {
@@ -13,18 +14,11 @@ const routes = [
     title: "Faucon | Main Dashboard",
   },
   {
-    component: NotFound,
+    component: Recommandation,
     exact: true,
-    label: "Component 2",
-    path: "/c2",
-    title: "Faucon | Component 2",
-  },
-  {
-    component: NotFound,
-    exact: true,
-    label: "Component 3",
-    path: "/c3",
-    title: "Faucon | Component 3",
+    label: "Recommandation",
+    path: "/recommandation",
+    title: "Faucon | Recommandation",
   },
   {
     component: Community,

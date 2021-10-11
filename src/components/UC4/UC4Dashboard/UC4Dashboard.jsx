@@ -252,15 +252,15 @@ class UC4Dashboard extends React.Component {
               Table of the authors with the most orders
             </Title>
           </GridItem>
-          <GridItem span={1} />
-          <GridItem span={3}>{this.pieChartDocs(topAuthorsDocs)}</GridItem>
-          <GridItem span={1} />
-          <GridItem span={3}>
+          {/* <GridItem span={1} /> */}
+          <GridItem span={4}>{this.pieChartDocs(topAuthorsDocs)}</GridItem>
+          {/* <GridItem span={1} /> */}
+          <GridItem span={4}>
             {this.pieChartInteractions(topAuthorsZoomVig)}
           </GridItem>
-          <GridItem span={1} />
-          <GridItem span={3}>{this.pieChartOrders(topAuthorsOrders)}</GridItem>
-          <GridItem span={1} />
+          {/* <GridItem span={1} /> */}
+          <GridItem span={4}>{this.pieChartOrders(topAuthorsOrders)}</GridItem>
+          {/* <GridItem span={1} /> */}
           <GridItem span={12}>{this.docTab(topDocs)}</GridItem>
         </Grid>
         {/* {this.pieChart(topAuthorsDocs)} */}
@@ -330,7 +330,7 @@ class UC4Dashboard extends React.Component {
     return (
       <UC4DashboardPieChart
         data={data}
-        legend="Percentage of the number of orders from the top authors"
+        legend="Percentage of the number of interactions from the top authors"
         legendData={legendData}
       />
     );
