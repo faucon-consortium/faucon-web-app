@@ -14,7 +14,7 @@ function Recommandation({ compProps }) {
   }
   return (
     <div>
-      <UC4Banner componentName="Community" />
+      <UC4Banner componentName="Recommandations" />
       <Divider component="div" />
       <UC4Recommandation />
     </div>

@@ -34,7 +34,7 @@ class UC4DashboardPieChart extends React.Component {
               right: 20,
               top: 20,
             }}
-            themeColor={ChartThemeColor.blue}
+            themeColor={ChartThemeColor.multiOrdered}
             width={500}
           />
         </div>

@@ -78,8 +78,8 @@ class UC4CommunityVisuAlgo extends React.Component {
       }
       rows[rowIndex].isRowSelected = !rows[rowIndex].isRowSelected;
       data.sort((f, s) => s.nb_doc - f.nb_doc);
-      const docids = data[rowIndex].docids.slice(0, 9);
-      const topAuth = topAuthors[rowIndex].slice(0, 9);
+      const docids = data[rowIndex].docids.slice(0, 10);
+      const topAuth = topAuthors[rowIndex].slice(0, 10);
       this.onClick();
       this.setState({ drawerData: docids, selectedTopAuthors: [topAuth] });
     };
