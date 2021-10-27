@@ -1,16 +1,33 @@
 import React from "react";
 import {
-  SearchInput,
+  // DataListItemCells,
+  Bullseye,
+  Button,
+  Card,
+  DataList,
+  DataListCell,
+  DataListItem,
+  DataListItemRow,
+  Divider,
+  EmptyState,
+  EmptyStateSecondaryActions,
+  EmptyStateVariant,
+  Gallery,
   Grid,
   GridItem,
-  DataList,
-  DataListItem,
-  DataListCell,
-  // DataListItemCells,
-  DataListItemRow,
+  SearchInput,
+  Title,
 } from "@patternfly/react-core";
 
-import { UC4RecommandationAuthor } from "./UC4RecommandationAuthor";
+import { UC4RecommandationAuthor } from "./UC4RecommandationAuthor.jsx";
+
+import victorHugo from "../../../assets/hugo.jpg";
+import delacroix from "../../../assets/delacroix.jpg";
+import caroll from "../../../assets/caroll.jpg";
+import koudelka from "../../../assets/koudelka.jpg";
+import dore from "../../../assets/dore.jpg";
+import utamaro from "../../../assets/utamaro.jpg";
+import vian from "../../../assets/vian.jpg";
 
 class UC4Recommandation extends React.Component {
   constructor(props) {
@@ -23,6 +40,7 @@ class UC4Recommandation extends React.Component {
       results: [],
       selectedDataListItemId: "",
       author: "",
+      tweets: [],
     };
 
     this.onChange = (value) => {
@@ -32,13 +50,18 @@ class UC4Recommandation extends React.Component {
       );
       this.setState({
         value: value,
-        resultsCount: res.length,
+        resultsCount: value === "" ? 0 : res.length,
         results: value === "" ? [] : res,
       });
     };
 
     this.onSelectDataListItem = (id) => {
       this.setState({ selectedDataListItemId: id });
+    };
+
+    this.onClick = (author) => {
+      console.log(author);
+      this.setState({ author: author });
     };
 
     this.onSearch = () => {
@@ -80,9 +103,28 @@ class UC4Recommandation extends React.Component {
 
   componentDidMount() {
     this.getAuthors();
+    this.getTweets();
   }
 
   componentWillUnmount() {}
+
+  getTweets() {
+    fetch(`http://localhost:5002/gettweets/`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!Object.prototype.hasOwnProperty.call(data, "result")) {
+          this.setState({ tweets: [] });
+        } else if (data.result === "not found") {
+          this.setState({ tweets: [] });
+        } else {
+          this.setState({ tweets: data.result });
+        }
+      })
+      .catch((error) => {
+        this.setState({ tweets: [] });
+        console.error("Error:", error);
+      });
+  }
 
   getAuthors() {
     fetch(`http://localhost:5002/getauthors`)
@@ -146,10 +188,80 @@ class UC4Recommandation extends React.Component {
     );
   }
 
+  acquireImage(idx) {
+    if (idx === 0) {
+      return delacroix;
+    }
+    if (idx === 1) {
+      return victorHugo;
+    }
+    if (idx === 2) {
+      return dore;
+    }
+    if (idx === 3) {
+      return koudelka;
+    }
+    if (idx === 4) {
+      return utamaro;
+    }
+    if (idx === 5) {
+      return caroll;
+    }
+    return vian;
+  }
+
+  tweetGallery() {
+    const { tweets } = this.state;
+    console.log(tweets);
+    return (
+      <Gallery
+        hasGutter
+        minWidths={{
+          md: "100px",
+          lg: "150px",
+          xl: "200px",
+          "2xl": "300px",
+        }}
+      >
+        {tweets.map((tweet, idx) => (
+          <Card isHoverable isCompact key={idx}>
+            <Bullseye>
+              <EmptyState variant={EmptyStateVariant.xs}>
+                <img
+                  src={this.acquireImage(idx)}
+                  alt="huge"
+                  width="100"
+                  height="100"
+                />
+                <Title headingLevel="h2" size="md">
+                  {tweet.text}
+                </Title>
+                <Divider />
+                <Title headingLevel="h6" size="md">
+                  {tweet.date}
+                </Title>
+                <EmptyStateSecondaryActions>
+                  <Button
+                    variant="secondary"
+                    onClick={() => this.onClick(tweet.author)}
+                  >
+                    Check Author
+                  </Button>
+                </EmptyStateSecondaryActions>
+              </EmptyState>
+            </Bullseye>
+          </Card>
+        ))}
+      </Gallery>
+    );
+  }
+
   dataList() {
     const { value, currentResult, resultsCount } = this.state;
+    const bottom =
+      resultsCount !== 0 ? this.makeDatalist() : this.tweetGallery();
     return (
-      <Grid>
+      <Grid hasGutter>
         <GridItem span={12}>
           <SearchInput
             placeholder="Find authors name"
@@ -162,14 +274,16 @@ class UC4Recommandation extends React.Component {
             onSearch={this.onSearch}
           />
         </GridItem>
-        <GridItem span={12}>{this.makeDatalist()}</GridItem>
+        <GridItem span={12} style={{ paddingLeft: "1em" }}>
+          {bottom}
+        </GridItem>
       </Grid>
     );
   }
 
   render() {
     const { author } = this.state;
-    if (author === "") return this.dataList();
+    if (author == null || author === "") return this.dataList();
     return <UC4RecommandationAuthor author={author} />;
   }
 }

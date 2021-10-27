@@ -9,7 +9,7 @@ import {
   Td,
 } from "@patternfly/react-table";
 
-import { Flex, FlexItem, Title, Bullseye } from "@patternfly/react-core";
+import { Alert, Flex, FlexItem, Title, Bullseye } from "@patternfly/react-core";
 
 class UC4RecommandationAuthor extends React.Component {
   constructor(props) {
@@ -74,7 +74,6 @@ class UC4RecommandationAuthor extends React.Component {
       "Familiar users",
       "Percent",
     ];
-    console.log(commsStas);
     const rows = commsStas[method].map((result, idx) => ({
       cells: [
         method,
@@ -132,7 +131,16 @@ class UC4RecommandationAuthor extends React.Component {
   }
 
   render() {
-    const { methods, author } = this.state;
+    const { methods, author, commsStas } = this.state;
+    if (Object.keys(commsStas).length === 0) {
+      return (
+        <Alert
+          variant="info"
+          title="The author does not exist in the database"
+        />
+      );
+    }
+    console.log(commsStas);
     const tabs = methods.map((method) => this.getTable(method));
     return (
       <Flex direction={{ default: "column" }}>

@@ -210,7 +210,7 @@ class UC4Dashboard extends React.Component {
           <FlexItem>
             <TextContent>
               <Text component={TextVariants.h2}>
-                Total number of users in the database : {totalIps}
+                Total number of users in the database : {24313}
               </Text>
             </TextContent>
           </FlexItem>
