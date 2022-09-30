@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@patternfly/patternfly": "^4.132.2",
-    "@patternfly/react-charts": "^6.15.20",
+    "@patternfly/react-charts": "^6.92.0",
     "@patternfly/react-core": "^4.152.4",
     "@patternfly/react-table": "^4.30.3",
     "concurrently": "^6.2.1",
